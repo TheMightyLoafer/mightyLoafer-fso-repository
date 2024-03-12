@@ -13,68 +13,64 @@ const App = () => {
   ];
 
   // Combine anecdote and its vote count into a single object
-  const initialAnecdotesWithVotes = anecdotes.map((anecdote, index) => ({
-    anecdote,
-    votes: 0,
-    id: index,
-    hasVoted: false,
-  }));
-
   const [anecdotesWithVotes, setAnecdotesWithVotes] = useState(
-    initialAnecdotesWithVotes
+    anecdotes.map((anecdote, id) => ({
+      anecdote,
+      votes: 0,
+      id: id,
+      hasVoted: false,
+    }))
   );
-  const [selected, setSelected] = useState(null);
+
+  const [selected, setSelected] = useState(0);
+  const [mostVotedAnecdote, setMostVotedAnecdote] = useState(0)
 
   const randomNum = () => {
-    return Math.ceil(Math.random() * anecdotes.length); // Adjusted range
+    return Math.ceil(Math.random() * anecdotes.length - 1); // Adjusted range
   };
 
-  const handleVote = () => {
-    if (selected === null) return; // Check if an anecdote is selected
-    if (anecdotesWithVotes[selected - 1].hasVoted) return; // Check if already voted
-  
+  const handleVote = (selectedId) => {
     setAnecdotesWithVotes((prevAnecdotes) => {
-      // Create a copy of the previous state array to avoid mutating it directly
       const updatedAnecdotes = [...prevAnecdotes];
-      // Update the vote count for the selected anecdote
-      updatedAnecdotes[selected - 1].votes += 1;
-      // Mark anecdote as voted
-      updatedAnecdotes[selected - 1].hasVoted = true;
-      // Return the updated state
+      updatedAnecdotes[selectedId].votes += 1;
+      updatedAnecdotes[selectedId].hasVoted = true;
       return updatedAnecdotes;
     });
   };
+
+  const selectRandomAnecdote = () => setSelected(randomNum());
+  console.log(randomNum())
+
+    // Use Effect hook to find the top voted anecdote on every render
+    useEffect(() => {
+      const topVoted = anecdotesWithVotes.reduce(
+        (mostVoted, current) =>
+          current.votes > mostVoted.votes ? current : mostVoted,
+        anecdotesWithVotes[0]
+      );
   
-
-  // Find the anecdote with the most votes
-  const mostVotedAnecdote = anecdotesWithVotes.reduce(
-    (mostVoted, current) =>
-      current.votes > mostVoted.votes ? current : mostVoted,
-    anecdotesWithVotes[0]
-  );
-
-  useEffect(() => {
-    setSelected(randomNum());
-    console.log(selected)
-  }, []); // Run only once on component mount
+      setMostVotedAnecdote(topVoted); // Update the most voted anecdote state
+    }, [anecdotesWithVotes]);
 
   return (
-    <div>
-      {selected !== null && (
-        <>
-          <h2>{anecdotes[selected - 1]}</h2>
-          <p>Has {anecdotesWithVotes[selected - 1]?.votes} Votes</p>
-          <button onClick={handleVote}>Vote</button>
-        </>
-      )}
-
-      <br />
-      <button onClick={() => setSelected(randomNum())}>next anecdote</button>
-      <br />
-      <h3>Most Voted Anecdote</h3>
-      <p>{mostVotedAnecdote.anecdote}</p>
-      <p>Has {mostVotedAnecdote.votes} Votes</p>
+    <>
+      <div>
+      <h1>Anecdotes</h1>
+      <p>{anecdotesWithVotes[selected]?.anecdote}</p>
+      <button onClick={selectRandomAnecdote}>Next Anecdote</button>
+      {console.log(selectRandomAnecdote)}
+      <button onClick={() => handleVote(selected)}>Vote</button>
+      {console.log(handleVote)}
+      <p>Votes: {anecdotesWithVotes[selected]?.votes || 0}</p>
     </div>
+    <div>
+      <h1>Top Voted Anecdote</h1>
+      {/* Display top voted anecdote information here */}
+      <p><strong>Anedote: </strong>{mostVotedAnecdote.anecdote}</p>
+      <p><strong>Votes: </strong>{mostVotedAnecdote.votes}</p>
+    </div>
+    </>
+
   );
 };
 
