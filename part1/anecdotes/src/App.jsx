@@ -16,7 +16,8 @@ const App = () => {
   const initialAnecdotesWithVotes = anecdotes.map((anecdote, index) => ({
     anecdote,
     votes: 0,
-    id: index, // Unique identifier for each anecdote
+    id: index,
+    hasVoted: false,
   }));
 
   const [anecdotesWithVotes, setAnecdotesWithVotes] = useState(
@@ -25,21 +26,25 @@ const App = () => {
   const [selected, setSelected] = useState(null);
 
   const randomNum = () => {
-    return Math.floor(Math.random() * anecdotes.length); // Adjusted range
+    return Math.ceil(Math.random() * anecdotes.length); // Adjusted range
   };
 
   const handleVote = () => {
     if (selected === null) return; // Check if an anecdote is selected
-
+    if (anecdotesWithVotes[selected - 1].hasVoted) return; // Check if already voted
+  
     setAnecdotesWithVotes((prevAnecdotes) => {
       // Create a copy of the previous state array to avoid mutating it directly
       const updatedAnecdotes = [...prevAnecdotes];
       // Update the vote count for the selected anecdote
       updatedAnecdotes[selected - 1].votes += 1;
+      // Mark anecdote as voted
+      updatedAnecdotes[selected - 1].hasVoted = true;
       // Return the updated state
       return updatedAnecdotes;
     });
   };
+  
 
   // Find the anecdote with the most votes
   const mostVotedAnecdote = anecdotesWithVotes.reduce(
@@ -50,6 +55,7 @@ const App = () => {
 
   useEffect(() => {
     setSelected(randomNum());
+    console.log(selected)
   }, []); // Run only once on component mount
 
   return (
