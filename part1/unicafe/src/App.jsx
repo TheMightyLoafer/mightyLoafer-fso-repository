@@ -1,5 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
+import Button from './components/Button'
 
 
 const App = () => {
@@ -9,6 +10,17 @@ const App = () => {
 
   return (
     <>
+      <div>
+        <h2>Give Feedback</h2>
+        <Button handleClick={() => setGood(prevValue => prevValue + 1)} text="good"></Button>
+        <Button handleClick={() => setNeutral(prevValue => prevValue + 1)} text="neutral"></Button>
+        <Button handleClick={() => setBad(prevValue => prevValue + 1)} text="bad"></Button>
+      </div>
+      <div>
+        <h2>Results</h2>
+        <p>Good:{good} Neutral:{neutral} Bad:{bad}</p>
+      </div>
+      
 
     </>
   )
