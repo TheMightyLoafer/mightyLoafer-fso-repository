@@ -8,6 +8,19 @@ const App = () => {
   const [neutral, setNeutral] = React.useState(0)
   const [bad, setBad] = React.useState(0)
 
+  const total = () => {
+    return good + neutral + bad
+  }
+
+  const average = () => {
+    const totalVote = total()
+    return totalVote === 0 ? "0" : (good + neutral + bad) / totalVote
+  }
+
+  const positive = () => {
+    const totalVote = total()
+    return totalVote === 0 ? "0" : ((good / totalVote) * 100).toFixed(2)
+  }
   return (
     <>
       <div>
@@ -19,6 +32,7 @@ const App = () => {
       <div>
         <h2>Results</h2>
         <p>Good:{good} Neutral:{neutral} Bad:{bad}</p>
+        <p>Total:{total()} Average:{average()} Positive:{positive()}</p>
       </div>
       
 
