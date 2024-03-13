@@ -14,26 +14,26 @@ const App = () => {
 
   // Combine anecdote and its vote count into a single object
   const [anecdotesWithVotes, setAnecdotesWithVotes] = useState(
-    anecdotes.map((anecdote, index) => ({
+    anecdotes.map((anecdote, id) => ({
       anecdote,
       votes: 0,
-      id: index,
+      id: id,
       hasVoted: false,
     }))
   );
 
-  const [selected, setSelected] = useState(randomNum());
+  const [selected, setSelected] = useState(0);
   const [mostVotedAnecdote, setMostVotedAnecdote] = useState(0)
-  
+
   const randomNum = () => {
     return Math.ceil(Math.random() * anecdotes.length - 1); // Adjusted range
   };
 
-  const handleVote = (selectedIndex) => {
+  const handleVote = (selectedId) => {
     setAnecdotesWithVotes((prevAnecdotes) => {
       const updatedAnecdotes = [...prevAnecdotes];
-      updatedAnecdotes[selectedIndex].votes += 1;
-      updatedAnecdotes[selectedIndex].hasVoted = true;
+      updatedAnecdotes[selectedId].votes += 1;
+      updatedAnecdotes[selectedId].hasVoted = true;
       return updatedAnecdotes;
     });
   };
