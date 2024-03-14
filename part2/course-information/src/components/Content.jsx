@@ -4,10 +4,11 @@ const Content = (parts) => {
             <p>{part.name} {part.exercises}</p>
         </div>)
     })
-    
+    const totalExercises = parts.course.reduce((sum, part) => sum + part.exercises, 0)
     return (
         <div>
             {courses}
+            <p><strong>Total exercises: {totalExercises}</strong></p>
         </div>
 
     )
