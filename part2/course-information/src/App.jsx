@@ -1,6 +1,4 @@
-import Header from './components/Header'
-import Content from './components/Content'
-import Total from './components/Total'
+import Course from './components/Course'
 
 const App = () => {
   // const-definitions

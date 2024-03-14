@@ -1,11 +1,13 @@
-const Content = ({parts}) => {
-    console.log(parts)
+const Content = (parts) => {
+    const courses = parts.course.map((part) => {
+        return(<div key={part.id}>
+            <p>{part.name} {part.exercises}</p>
+        </div>)
+    })
     
     return (
         <div>
-            <p>{parts[0].name}</p>
-            <p>{parts[1].name}</p>
-            <p>{parts[2].name}</p>
+            {courses}
         </div>
 
     )
