@@ -1,8 +1,26 @@
 import { useState } from 'react'
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }])
+  const [persons, setPersons] = useState([{ 
+    name: 'Arto Hellas',
+    id: persons.length + 1,
+   }])
   const [newName, setNewName] = useState('')
+
+  const addName = (event) => {
+    event.preventDefault()
+    const nameObject = {
+      content: newName,
+      id: persons.length + 1,
+    }
+
+    setPersons(person.concat(nameObject))
+    setNewName(() => "")
+  }
+
+  const handleChange = (event) => {
+    
+  }
 
   return (
     <div>
