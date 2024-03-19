@@ -25,13 +25,6 @@ const App = () => {
     });
   };
   
-  const handleSearch = (event) => {
-    event.preventDefault(); // Prevent default form submission
-    // Call filterPersons with persons and searchQuery
-    const filteredPersons = filterPersons(persons, searchQuery);
-    // You can potentially do something with the filtered list here
-  }
-
   const addName = (event) => {
     event.preventDefault()
     const nameObject = {
@@ -73,6 +66,7 @@ const App = () => {
       </div>
       <br />
       <div>
+        <h3>Add Contact</h3>
         <form onSubmit={addName}>
             name: <input value={newName} placeholder='Name?' onChange={handleNameChange}/>
             <br />
