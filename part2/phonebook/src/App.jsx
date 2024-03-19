@@ -17,11 +17,15 @@ const App = () => {
       id: persons.length + 1,
       number: newNumber,
     }
-
-    setPersons(persons.concat(nameObject))
-    console.log(persons)
-    setNewName(() => '')
-    setNewNumber(() => '')
+    if(!checkForDuplicates(nameObject.name)) {
+      setPersons(persons.concat(nameObject))
+      console.log(persons)
+      setNewName(() => '')
+      setNewNumber(() => '')
+    }
+    else {
+      alert('Contact already exists in phone book, try again')
+    }
   }
 
   const handleNameChange = (event) => {
@@ -31,7 +35,9 @@ const App = () => {
 
   const handleNumberChange = (event) => setNewNumber(() => event.target.value)
 
-
+  const checkForDuplicates = (name) => {
+    return persons.some((person) => person.name === name)
+  }
   return (
     <div>
       <h2>Phonebook</h2>
