@@ -36,7 +36,6 @@ useEffect(() => {
     event.preventDefault()
     const nameObject = {
       name: newName,
-      id: !persons.id ? 0 : persons.id + 1,
       number: newNumber,
     }
     if(!checkForDuplicates(nameObject.name)) {
@@ -68,7 +67,7 @@ useEffect(() => {
   const checkForDuplicates = (name) => {
     return persons.some((person) => person.name === name)
   }
-  
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -91,7 +90,7 @@ useEffect(() => {
 
       <h2>Numbers</h2>
       {filterPersons(persons, searchQuery).map((person) => (
-        <div key={person.id}>
+        <div key={person.name}>
           <h4>Contact</h4>
           <ul>
             <li>Contact Name: {person.name}</li>
