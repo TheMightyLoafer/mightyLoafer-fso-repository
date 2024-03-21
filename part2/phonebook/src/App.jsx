@@ -49,7 +49,7 @@ useEffect(() => {
           setNewNumber('')
         })
     }
-    
+
     else {
       alert('Contact already exists in phone book, try again')
     }
@@ -68,6 +68,7 @@ useEffect(() => {
   const checkForDuplicates = (name) => {
     return persons.some((person) => person.name === name)
   }
+  
   return (
     <div>
       <h2>Phonebook</h2>
