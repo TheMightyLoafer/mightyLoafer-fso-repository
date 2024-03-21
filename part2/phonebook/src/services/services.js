@@ -14,12 +14,16 @@ const create = newObject => {
     const request = axios.post(baseUrl, newObject)
     return request
         .then(response => response.data)
-        
+        .catch(error => {
+            console.log('Error posting object to server', error)
+        })
 }
 
 const update = (id, newObject) => {
     const request = axios.put(`${baseUrl}/${id}`, newObject)
-    return request.then(response => response.data)
+    return request
+        .then(response => response.data)
+        .catch(error => console.log('Error updating server object', error))
 }
 
 export default {
