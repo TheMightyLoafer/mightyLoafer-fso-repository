@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import services from './services/services'
+
 
 const App = () => {
   const id = 0
@@ -9,10 +11,10 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('')
 
 useEffect(() => {
-  axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
+  services
+    .getAll()
+    .then(res => {
+      setPersons(res)
     })
 }, [])
 
@@ -34,15 +36,20 @@ useEffect(() => {
     event.preventDefault()
     const nameObject = {
       name: newName,
-      id: persons.length + 1,
+      id: !persons.id ? 0 : persons.id + 1,
       number: newNumber,
     }
     if(!checkForDuplicates(nameObject.name)) {
-      setPersons(persons.concat(nameObject))
-      console.log(persons)
-      setNewName(() => '')
-      setNewNumber(() => '')
+
+      services
+        .create(nameObject)
+        .then(returnedObject => {
+          setPersons(persons.concat(returnedObject))
+          setNewName('')
+          setNewNumber('')
+        })
     }
+    
     else {
       alert('Contact already exists in phone book, try again')
     }
