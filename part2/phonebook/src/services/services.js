@@ -26,8 +26,15 @@ const update = (id, newObject) => {
         .catch(error => console.log('Error updating server object', error))
 }
 
+const deleteObj = (id) => {
+    const request = axios.delete(`${baseUrl}/${id}`)
+    return request
+        .catch(error => console.log('Error deleting object', error))
+}
+
 export default {
     getAll,
     create,
-    update
+    update,
+    deleteObj
 }

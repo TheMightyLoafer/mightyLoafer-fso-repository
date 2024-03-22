@@ -16,7 +16,7 @@ useEffect(() => {
     .then(res => {
       setPersons(res)
     })
-}, [])
+}, [persons])
 
   const filterPersons = (persons, searchQuery) => {
     if (!searchQuery) {
@@ -37,9 +37,10 @@ useEffect(() => {
     const nameObject = {
       name: newName,
       number: newNumber,
+      id: `${persons.length + 1}`,
     }
-    if(!checkForDuplicates(nameObject.name)) {
-
+    const existingContact = persons.find(person => person.name === nameObject.name)
+    if(!existingContact) {
       services
         .create(nameObject)
         .then(returnedObject => {
@@ -47,10 +48,19 @@ useEffect(() => {
           setNewName('')
           setNewNumber('')
         })
-    }
+    } else {
+      if(window.confirm('Name already exists, would you like to update the existing contact?'))
+{        const updatedContact = {
+          ...existingContact,
+          number: newNumber,}
 
-    else {
-      alert('Contact already exists in phone book, try again')
+          services.update(existingContact.id, updatedContact)
+            .then(() => {
+              setPersons(persons.filter(person => person.id !== existingContact.id).concat(updatedContact))
+              setNewName('')
+              setNewNumber('')
+            })
+          }
     }
   }
 
@@ -64,8 +74,9 @@ useEffect(() => {
 
   const handleNumberChange = (event) => setNewNumber(() => event.target.value)
 
-  const checkForDuplicates = (name) => {
-    return persons.some((person) => person.name === name)
+  const handleDelete = (id) => {
+    services
+      .deleteObj(id)
   }
 
   return (
@@ -90,11 +101,12 @@ useEffect(() => {
 
       <h2>Numbers</h2>
       {filterPersons(persons, searchQuery).map((person) => (
-        <div key={person.name}>
+        <div key={person.id}>
           <h4>Contact</h4>
           <ul>
             <li>Contact Name: {person.name}</li>
             <li>Contact Number: {person.number}</li>
+            <button onClick={() => handleDelete(person.id)}>delete</button>
           </ul>
       </div>
       ))}
