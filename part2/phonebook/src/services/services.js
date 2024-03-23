@@ -36,5 +36,5 @@ export default {
     getAll,
     create,
     update,
-    deleteObj
+    deleteObj,
 }

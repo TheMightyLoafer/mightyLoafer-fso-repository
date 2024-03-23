@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import services from './services/services'
+import Notification from './components/Notification'
 
 
 const App = () => {
-  const id = 0
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [displayNotification, setDisplayNotification] = useState(false)
+  const [notificationMessage, setNotificationMessage] = useState('')
+  const [messageType, setMessageType] = useState('')
 
 useEffect(() => {
   services
@@ -16,7 +19,7 @@ useEffect(() => {
     .then(res => {
       setPersons(res)
     })
-}, [persons])
+}, [])
 
   const filterPersons = (persons, searchQuery) => {
     if (!searchQuery) {
@@ -47,6 +50,7 @@ useEffect(() => {
           setPersons(persons.concat(returnedObject))
           setNewName('')
           setNewNumber('')
+          handleNotification('Contact Added', 'success')
         })
     } else {
       if(window.confirm('Name already exists, would you like to update the existing contact?'))
@@ -59,6 +63,7 @@ useEffect(() => {
               setPersons(persons.filter(person => person.id !== existingContact.id).concat(updatedContact))
               setNewName('')
               setNewNumber('')
+              handleNotification('Successfully Updated', 'success')
             })
           }
     }
@@ -74,11 +79,27 @@ useEffect(() => {
 
   const handleNumberChange = (event) => setNewNumber(() => event.target.value)
 
-  const handleDelete = (id) => {
-    services
-      .deleteObj(id)
-  }
+  const handleDelete = async (id) => {
+    try {
+      await services.deleteObj(id);
+      const response = await services.getAll();
+      setPersons(response.filter(person => person.id !== id)); // Filter out deleted object
+      if(response){handleNotification('Deleted', 'success')}
+    } catch (error) {
+      console.error('Error deleting object:', error)
+      handleNotification('There was an error', 'error')
+    }
+  };
 
+  const handleNotification = (message, type) => {
+    setDisplayNotification(true)
+    setMessageType(type)
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setDisplayNotification(false)
+    }, 5000)
+  }
+  
   return (
     <div>
       <h2>Phonebook</h2>
@@ -97,6 +118,7 @@ useEffect(() => {
             <br/>
             <button type="submit">add</button>
         </form>
+        {displayNotification && <Notification messageType={messageType} message={notificationMessage} />}
       </div>
 
       <h2>Numbers</h2>
