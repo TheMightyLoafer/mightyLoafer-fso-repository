@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Notification from './components/Notification'
-import { apiUrl } from './config'
+import { apiUrl } from '../config'
 
 const App = () => {
   const [persons, setPersons] = useState([])
