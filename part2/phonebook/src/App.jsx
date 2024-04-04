@@ -13,10 +13,12 @@ const App = () => {
   const [messageType, setMessageType] = useState('')
 
 useEffect(() => {
-  axios.get('http://localhost:3001/api/persons')
-    .then(response => setPersons(response.data))
-    .catch(error => console.error('Error fetching data:', error))
-}, [])
+  const fetchData = async () => {
+    const response = await axios.get('http://localhost:3001/api/persons')
+    setPersons(response.data)
+  };
+  fetchData();
+  }, []);
 
   const filterPersons = (persons, searchQuery) => {
     if (!searchQuery) {
@@ -32,7 +34,7 @@ useEffect(() => {
     });
   };
   
-  const addName = (event) => {
+  const addName = async (event) => {
     event.preventDefault()
     const nameObject = {
       name: newName,
@@ -40,13 +42,17 @@ useEffect(() => {
     }
     const existingContact = persons.find(person => person.name === nameObject.name)
     if(!existingContact) {
-      axios.post('http://localhost:3001/api/persons', nameObject)
-        .then(returnedObject => {
-          setPersons(persons.concat(returnedObject))
-          setNewName('')
-          setNewNumber('')
-          handleNotification('Contact Added', 'success')
-        })
+      try {
+        const returnedObject = await axios.post('http://localhost:3001/api/persons', nameObject)
+        setPersons(persons.concat(returnedObject))
+        setNewName('')
+        setNewNumber('')
+        handleNotification('Contact Added', 'success')
+        const response = await axios.get('http://localhost:3001/api/persons')
+        setPersons(response.data)
+      } catch (error) {
+        console.error('Error adding person:', error)
+      }
     } else {
       if(window.confirm('Name already exists, would you like to update the existing contact?'))
 {        const updatedContact = {
