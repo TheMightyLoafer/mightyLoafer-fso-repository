@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import services from './services/services'
 import Notification from './components/Notification'
 
 
@@ -14,11 +13,9 @@ const App = () => {
   const [messageType, setMessageType] = useState('')
 
 useEffect(() => {
-  services
-    .getAll()
-    .then(res => {
-      setPersons(res)
-    })
+  axios.get('http://localhost:3001/api/persons')
+    .then(response => setPersons(response.data))
+    .catch(error => console.error('Error fetching data:', error))
 }, [])
 
   const filterPersons = (persons, searchQuery) => {
@@ -43,8 +40,7 @@ useEffect(() => {
     }
     const existingContact = persons.find(person => person.name === nameObject.name)
     if(!existingContact) {
-      services
-        .create(nameObject)
+      axios.post('http://localhost:3001/api/persons', nameObject)
         .then(returnedObject => {
           setPersons(persons.concat(returnedObject))
           setNewName('')
