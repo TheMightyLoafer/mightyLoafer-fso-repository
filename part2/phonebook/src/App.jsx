@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Notification from './components/Notification'
 
+const baseUrl = '/api/persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -14,7 +16,7 @@ const App = () => {
 
 useEffect(() => {
   const fetchData = async () => {
-    const response = await axios.get('http://localhost:3001/api/persons')
+    const response = await axios.get(baseUrl)
     setPersons(response.data)
   };
   fetchData();
