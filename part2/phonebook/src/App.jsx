@@ -53,7 +53,7 @@ useEffect(() => {
           ...existingContact,
           number: newNumber,}
 
-          services.update(existingContact.id, updatedContact)
+          axios.put(existingContact.id, updatedContact)
             .then(() => {
               setPersons(persons.filter(person => person.id !== existingContact.id).concat(updatedContact))
               setNewName('')
@@ -76,13 +76,13 @@ useEffect(() => {
 
   const handleDelete = async (id) => {
     try {
-      await services.deleteObj(id);
-      const response = await services.getAll();
-      setPersons(response.filter(person => person.id !== id)); // Filter out deleted object
-      if(response){handleNotification('Deleted', 'success')}
+      await axios.delete(`http://localhost:3001/api/persons/${id}`);
+      // No need for response here
+      setPersons(persons.filter(person => person.id !== id)); // Filter out deleted object
+      handleNotification('Deleted', 'success');
     } catch (error) {
-      console.error('Error deleting object:', error)
-      handleNotification('There was an error', 'error')
+      console.error('Error deleting object:', error);
+      handleNotification('There was an error', error);
     }
   };
 
