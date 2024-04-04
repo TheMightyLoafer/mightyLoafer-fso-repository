@@ -40,7 +40,6 @@ useEffect(() => {
     const nameObject = {
       name: newName,
       number: newNumber,
-      id: `${persons.length + 1}`,
     }
     const existingContact = persons.find(person => person.name === nameObject.name)
     if(!existingContact) {
