@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Notification from './components/Notification'
-import { apiUrl } from '../config'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,9 +11,11 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState('')
   const [messageType, setMessageType] = useState('')
 
+  const baseUrl = import.meta.env.VITE_API_URL
+
 useEffect(() => {
   const fetchData = async () => {
-    const response = await axios.get(`${apiUrl}/api/persons`)
+    const response = await axios.get(`${baseUrl}/api/persons`)
     setPersons(response.data)
   };
   fetchData();
@@ -43,12 +44,12 @@ useEffect(() => {
     const existingContact = persons.find(person => person.name === nameObject.name)
     if(!existingContact) {
       try {
-        const returnedObject = await axios.post(`${apiUrl}/api/persons`, nameObject)
+        const returnedObject = await axios.post(`${baseUrl}/api/persons`, nameObject)
         setPersons(persons.concat(returnedObject))
         setNewName('')
         setNewNumber('')
         handleNotification('Contact Added', 'success')
-        const response = await axios.get(`${apiUrl}/api/persons`)
+        const response = await axios.get(`${baseUrl}/api/persons`)
         setPersons(response.data)
       } catch (error) {
         console.error('Error adding person:', error)
@@ -82,7 +83,7 @@ useEffect(() => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${apiUrl}/api/persons/${id}`);
+      await axios.delete(`${baseUrl}/api/persons/${id}`);
       // No need for response here
       setPersons(persons.filter(person => person.id !== id)); // Filter out deleted object
       handleNotification('Deleted', 'success');
