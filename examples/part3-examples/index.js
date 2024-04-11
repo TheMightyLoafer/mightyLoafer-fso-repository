@@ -38,8 +38,16 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+//app.get('/', (request, response) => {
+  //response.send('<h1>Hello World!</h1>')
+//})
+
+noteSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
 })
 
 app.get('/api/notes', (request, response) => {
