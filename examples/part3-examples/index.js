@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const config = require('./config')
 const mongoose = require('mongoose')
+const Note = require('./models/note')
 
 const password = process.argv[2]
 const mongoUrl = config.MONGODB_URL
@@ -10,14 +11,7 @@ const mongoUrl = config.MONGODB_URL
 
 mongoose.connect(mongoUrl)  
 
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-
-const Note = mongoose.model('Note', noteSchema)
-
-//app.use(express.static('dist'))
+app.use(express.static('dist'))
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
@@ -41,14 +35,6 @@ const unknownEndpoint = (request, response) => {
 //app.get('/', (request, response) => {
   //response.send('<h1>Hello World!</h1>')
 //})
-
-noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})
 
 app.get('/api/notes', (request, response) => {
   Note.find({}).then(notes => {
@@ -88,7 +74,7 @@ app.delete('/api/notes/:id', (request, response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = config.PORT
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
