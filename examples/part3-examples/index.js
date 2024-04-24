@@ -1,17 +1,16 @@
 const express = require('express')
 const app = express()
-const config = require('./config')
-const mongoose = require('mongoose')
+require('dotenv').config()
+
 const Note = require('./models/note')
 
-const password = process.argv[2]
-const mongoUrl = config.MONGODB_URL
+let notes = [
 
-// DO NOT SAVE YOUR PASSWORD TO GITHUB!!
-
-mongoose.connect(mongoUrl)  
+]
 
 app.use(express.static('dist'))
+
+// DO NOT SAVE YOUR PASSWORD TO GITHUB!!
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)

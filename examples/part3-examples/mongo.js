@@ -12,13 +12,12 @@ const url =
 
 mongoose.set('strictQuery', false)
 
-mongoose.connect(url)
-
-const noteSchema = new mongoose.Schema({
+mongoose.connect(url).then(() => {
+  const noteSchema = new mongoose.Schema({
     content: String,
     important: Boolean,
   })
-  
+})
   const Note = mongoose.model('Note', noteSchema)
   
   const note = new Note({
